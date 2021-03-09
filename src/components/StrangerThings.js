@@ -6,17 +6,24 @@ const getRealityClass = (hereIsTheUpsideDownWorld) => (
 );
 
 const strangerThingsConfig = {
-  url: 'http://localhost:3002',
-  timeout: 30000,
+  url: process.env.REACT_APP_HAWKINS_URL,
+  timeout: parseInt(process.env.REACT_APP_HAWKINS_TIMEOUT, 10),
 };
 
 const upsideDownConfig = {
-  url: 'http://localhost:3003',
-  timeout: 30000,
+  url: process.env.REACT_APP_UPSIDEDOWN_URL,
+  timeout: parseInt(process.env.REACT_APP_UPSIDEDOWN_TIMEOUT, 10),
 };
 
 const charactersService = new CharactersService(strangerThingsConfig);
 const charactersUpsideDownService = new CharactersService(upsideDownConfig);
+
+const developmentEnvironment = process.env.REACT_APP_ENVIRONMENT === 'development';
+const devTag = () => (
+  <div>
+    <h2>Em desenvolvimento</h2>
+  </div>
+);
 
 class StrangerThings extends React.Component {
   constructor(props) {
@@ -39,6 +46,10 @@ class StrangerThings extends React.Component {
     this.previousPage = this.previousPage.bind(this);
   }
 
+  componentDidMount() {
+    this.searchCharacter();
+  }
+
   handleInput(event) {
     this.setState({
       characterName: event.target.value,
@@ -50,6 +61,8 @@ class StrangerThings extends React.Component {
     this.setState({
       hereIsTheUpsideDownWorld: !hereIsTheUpsideDownWorld,
       characters: [],
+    }, () => {
+      this.searchCharacter();
     });
   }
 
@@ -113,6 +126,7 @@ class StrangerThings extends React.Component {
         )}` }
       >
         <div className="content strangerfy">
+          { developmentEnvironment && devTag() }
           <div className="change-reality">
             <button type="button" onClick={ this.changeRealityClick }>
               {' '}
@@ -139,6 +153,7 @@ class StrangerThings extends React.Component {
                 </tr>
               </thead>
               <tbody>
+                {console.log(characters)}
                 {characters.map((char) => (
                   <tr key={ char.name }>
                     <td>{char.name}</td>
