@@ -5,14 +5,22 @@ const getRealityClass = (hereIsTheUpsideDownWorld) => (
   hereIsTheUpsideDownWorld ? 'upside-down' : 'stranger-things'
 );
 
+const DEFAULT_TIMEOUT = 30000;
+
+const {
+  REACT_APP_HAWKINS_URL, REACT_APP_HAWKINS_TIMEOUT,
+  REACT_APP_UPSIDEDOWN_URL, REACT_APP_UPSIDEDOWN_TIMEOUT,
+  REACT_APP_DEVELOPER_MODE,
+} = process.env;
+
 const strangerThingsConfig = {
-  url: 'http://localhost:3002',
-  timeout: 30000,
+  url: REACT_APP_HAWKINS_URL || 'http://localhost:3002',
+  timeout: REACT_APP_HAWKINS_TIMEOUT || DEFAULT_TIMEOUT,
 };
 
 const upsideDownConfig = {
-  url: 'http://localhost:3003',
-  timeout: 30000,
+  url: REACT_APP_UPSIDEDOWN_URL || 'http://localhost:3002',
+  timeout: REACT_APP_UPSIDEDOWN_TIMEOUT || DEFAULT_TIMEOUT,
 };
 
 const charactersService = new CharactersService(strangerThingsConfig);
@@ -112,6 +120,9 @@ class StrangerThings extends React.Component {
           hereIsTheUpsideDownWorld,
         )}` }
       >
+        <h1 className="development-flag">
+          {REACT_APP_DEVELOPER_MODE === 'true' && 'Em desenvolvimento'}
+        </h1>
         <div className="content strangerfy">
           <div className="change-reality">
             <button type="button" onClick={ this.changeRealityClick }>
