@@ -1,19 +1,24 @@
 import React from 'react';
 import CharactersService from '../services/charactersAPI';
 
+require('dotenv').config();
+
 const getRealityClass = (hereIsTheUpsideDownWorld) => (
   hereIsTheUpsideDownWorld ? 'upside-down' : 'stranger-things'
 );
 
 const strangerThingsConfig = {
-  url: 'http://localhost:3002',
-  timeout: 30000,
+  url: process.env.REACT_APP_HAWKINS_URL,
+  timeout: process.env.REACT_APP_HAWKINS_TIMEOUT,
 };
 
 const upsideDownConfig = {
-  url: 'http://localhost:3003',
-  timeout: 30000,
+  url: process.env.REACT_APP_UPSIDEDOWN_URL,
+  timeout: process.env.REACT_APP_UPSIDEDOWN_TIMEOUT,
 };
+
+const development = process.env.REACT_APP_DEVELOPMENT_TAG === 'true';
+console.log(process.env.REACT_APP_DEVELOPMENT_TAG);
 
 const charactersService = new CharactersService(strangerThingsConfig);
 const charactersUpsideDownService = new CharactersService(upsideDownConfig);
@@ -121,6 +126,8 @@ class StrangerThings extends React.Component {
           </div>
 
           <div>
+            {/* {console.log(development, 'aqui')} */}
+            { development && <span>Em desenvolvimento</span>}
             <input
               placeholder="Nome do Personagem"
               onChange={ this.handleInput }
