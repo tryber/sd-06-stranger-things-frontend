@@ -6,13 +6,13 @@ const getRealityClass = (hereIsTheUpsideDownWorld) => (
 );
 
 const strangerThingsConfig = {
-  url: 'http://localhost:3002',
-  timeout: 30000,
+  url: process.env.REACT_APP_HAWKINS_URL,
+  timeout: process.env.REACT_APP_HAWKINS_TIMEOUT,
 };
 
 const upsideDownConfig = {
-  url: 'http://localhost:3003',
-  timeout: 30000,
+  url: process.env.REACT_APP_UPSIDEDOWN_URL,
+  timeout: process.env.REACT_APP_UPSIDEDOWN_TIMEOUT,
 };
 
 const charactersService = new CharactersService(strangerThingsConfig);
@@ -21,7 +21,6 @@ const charactersUpsideDownService = new CharactersService(upsideDownConfig);
 class StrangerThings extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       hereIsTheUpsideDownWorld: false,
       characterName: '',
@@ -31,10 +30,8 @@ class StrangerThings extends React.Component {
 
     this.handleInput = this.handleInput.bind(this);
     this.changeRealityClick = this.changeRealityClick.bind(this);
-
     this.searchClick = this.searchClick.bind(this);
     this.searchCharacter = this.searchCharacter.bind(this);
-
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
   }
@@ -67,7 +64,6 @@ class StrangerThings extends React.Component {
     const service = hereIsTheUpsideDownWorld
       ? charactersUpsideDownService
       : charactersService;
-
     const numberOfPages = 10;
     service
       .getCharacters(characterName, pages || page, numberOfPages)
@@ -80,7 +76,6 @@ class StrangerThings extends React.Component {
 
   nextPage() {
     const { page, characters } = this.state;
-
     if (!characters.length) return;
     this.setState(
       {
@@ -93,7 +88,6 @@ class StrangerThings extends React.Component {
   previousPage() {
     const { page } = this.state;
     if (page <= 1) return;
-
     this.setState(
       {
         page: page - 1,
@@ -119,7 +113,6 @@ class StrangerThings extends React.Component {
               Mudar de Realidade
             </button>
           </div>
-
           <div>
             <input
               placeholder="Nome do Personagem"
@@ -128,7 +121,6 @@ class StrangerThings extends React.Component {
             />
             <button type="button" onClick={ this.searchClick }>Pesquisar</button>
           </div>
-
           <div>
             <table>
               <thead>
@@ -149,7 +141,7 @@ class StrangerThings extends React.Component {
               </tbody>
             </table>
           </div>
-
+          {process.env.REACT_APP_DEVELOPMENT && <p>Em desenvolvimento</p>}
           <div>
             <p>
               Página atual:
