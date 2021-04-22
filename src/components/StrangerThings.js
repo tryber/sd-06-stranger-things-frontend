@@ -1,4 +1,5 @@
 import React from 'react';
+
 import CharactersService from '../services/charactersAPI';
 
 const getRealityClass = (hereIsTheUpsideDownWorld) => (
@@ -6,14 +7,16 @@ const getRealityClass = (hereIsTheUpsideDownWorld) => (
 );
 
 const strangerThingsConfig = {
-  url: 'http://localhost:3002',
-  timeout: 30000,
+  url: process.env.REACT_APP_HAWKINS_URL,
+  timeout: process.env.REACT_APP_HAWKINS_TIMEOUT,
 };
 
 const upsideDownConfig = {
-  url: 'http://localhost:3003',
-  timeout: 30000,
+  url: process.env.REACT_APP_UPSIDEDOWN_URL,
+  timeout: process.env.REACT_APP_UPSIDEDOWN_TIMEOUT,
 };
+
+const developmentEnvironment = process.env.REACT_APP_DEVELOPMENT === 'true';
 
 const charactersService = new CharactersService(strangerThingsConfig);
 const charactersUpsideDownService = new CharactersService(upsideDownConfig);
@@ -67,7 +70,6 @@ class StrangerThings extends React.Component {
     const service = hereIsTheUpsideDownWorld
       ? charactersUpsideDownService
       : charactersService;
-
     const numberOfPages = 10;
     service
       .getCharacters(characterName, pages || page, numberOfPages)
@@ -80,7 +82,6 @@ class StrangerThings extends React.Component {
 
   nextPage() {
     const { page, characters } = this.state;
-
     if (!characters.length) return;
     this.setState(
       {
@@ -93,7 +94,6 @@ class StrangerThings extends React.Component {
   previousPage() {
     const { page } = this.state;
     if (page <= 1) return;
-
     this.setState(
       {
         page: page - 1,
@@ -118,6 +118,7 @@ class StrangerThings extends React.Component {
               {' '}
               Mudar de Realidade
             </button>
+            { developmentEnvironment && <span>Em desenvolvimento</span> }
           </div>
 
           <div>
@@ -128,7 +129,6 @@ class StrangerThings extends React.Component {
             />
             <button type="button" onClick={ this.searchClick }>Pesquisar</button>
           </div>
-
           <div>
             <table>
               <thead>
@@ -141,15 +141,14 @@ class StrangerThings extends React.Component {
               <tbody>
                 {characters.map((char) => (
                   <tr key={ char.name }>
-                    <td>{char.name}</td>
-                    <td>{char.origin}</td>
-                    <td>{char.status}</td>
+                    <td>{ char.name }</td>
+                    <td>{ char.origin }</td>
+                    <td>{ char.status }</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
           <div>
             <p>
               Página atual:
@@ -165,5 +164,4 @@ class StrangerThings extends React.Component {
     );
   }
 }
-
 export default StrangerThings;
